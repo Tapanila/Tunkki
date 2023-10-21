@@ -9,6 +9,7 @@ use App\Helper\SSH;
 use App\Helper\Mattermost;
 use App\Helper\ZMQHelper;
 use App\Helper\Barcode;
+use App\Helper\AppleWallet;
 use App\Repository\DoorLogRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Picqer\Barcode\BarcodeGeneratorHTML;
@@ -136,5 +137,14 @@ class KerdeController extends AbstractController
         return $this->render('kerde/barcodes.html.twig', [
             'barcodes' => $barcodes
         ]);
+    }
+
+    #[Route('/kerde/appleWallet', name: 'appleWallet')]
+    public function appleWallet(AppleWallet $appleWallet): Response
+    {
+        $user = $this->getUser();
+        assert($user instanceof User);
+        $member = $user->getMember();
+        return new Response($appleWallet->getPass($member->getId(), 60.187340, 24.83650, 'Kerhohuone', $member->getName()));
     }
 }
