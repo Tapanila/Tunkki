@@ -2,29 +2,31 @@
 
 namespace App\Helper;
 
+
 use PKPass\PKPass;
 
 class AppleWallet
 {
     public function getPass(
-        $barcode,
-        $latitude = 60.187340,
-        $longitude = 24.836350,
-        $header = 'Kerhohuone',
-        $primaryString = ''): string
+        string $barcode,
+        float $latitude,
+        float $longitude,
+        string $header,
+        string $primaryString): string
     {
-        $certFile = \dirname(__DIR__) . '/../assets/certificates/EntropyTunkkiCertificates.p12';
+
+        $certFile = \dirname(__DIR__) . '/../config/secrets/' . $_ENV['APP_ENV'] . '/apple-wallet.p12';
 
         $pass = new PKPass($certFile, $_ENV['APPLE_PASS_CERTIFICATE_PASSWORD']);
 
         // Pass content
         $data = [
-            'description' => 'Kerhohuone',
+            'description' => $header,
             'formatVersion' => 1,
             'organizationName' => 'Entropy',
             'passTypeIdentifier' => 'pass.fi.entropy.wallet',
-            'serialNumber' => strval($barcode),
-            'teamIdentifier' => 'Q5J96ZZSLK',
+            'serialNumber' => $barcode,
+            'teamIdentifier' => $_ENV['APPLE_PASS_TEAM_IDENTIFIER'],
             'locations' => [
                 [
                     'latitude' => $latitude,
@@ -33,20 +35,20 @@ class AppleWallet
             ],
             'barcode' => [
                 'format' => 'PKBarcodeFormatCode128',
-                'message' => strval($barcode),
+                'message' => $barcode,
                 'messageEncoding' => 'iso-8859-1',
             ],
             'eventTicket' => [
                 'headerFields' => [
                     [
                         'key' => 'passHeader',
-                        'value' => strval($header)
+                        'value' => $header
                     ]
                     ],
                 'primaryFields' => [
                     [
                         'key' => 'name',
-                        'value' => strval($primaryString)
+                        'value' => $primaryString
                     ]
                 ]
             ],
