@@ -11,8 +11,11 @@
         <p class="text-center">Code: {{ barcode.0 }}
         </p>
         <p>
-            <a href="./appleWallet">
+            <a href="{{ path('appleWallet') }}">
                 <img src="{{ asset('/images/apple-wallet.svg') }}"/>
+            </a>
+            <a href="./googleWallet">
+                <img src="{{ asset('/images/google-wallet.svg') }}"/>
             </a>
         </p>
     </div>
